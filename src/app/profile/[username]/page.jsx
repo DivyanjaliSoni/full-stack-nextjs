@@ -1,22 +1,17 @@
 "use client"
-import { useRouter } from 'next/navigation'
 import React from 'react'
-import axios from 'axios'
+import ProfileHeader from "../profileheader/page"
+import ProfileFooter from "../profilefooter/page"
+
 
 const UserProfile = ({params}) => {
-  const router = useRouter()
-  const logout = async () =>{
-    try {
-       await axios.get("/api/users/logout")
-       router.push("/login")
-    } catch (error) {
-      console.log(error.mesage)
-    }
-  }
   return (
     <>
+    <ProfileHeader/>
+    <div className='mt-24'>
     <div>{params.username}</div>
-    <button onClick={logout}>Logout</button>
+    </div>
+    <ProfileFooter /> 
     </>
   )
 }
