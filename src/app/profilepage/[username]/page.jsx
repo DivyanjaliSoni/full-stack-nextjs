@@ -13,13 +13,22 @@ import Link from 'next/link';
 
 const ProfilePage = () => {
     const router = useRouter()
+    const [userUserName , setUserUserName] = useState([])
+    const [userName , setUserName] = useState()
+    const [bio , setBio] = useState()
+    const [followers , setFollowers] = useState([])
+    const [following,setFollowing] = useState([])
+
     const pathname = usePathname()
-    const [userInfo , setUserInfo] = useState([])
     const username = pathname.split('page/').pop();
     const getUserFromId = async () =>{
         try {
             const userinfo = await axios.post("/api/users/getuserfromusername",{username:username})
-            setUserInfo(userinfo)
+            setUserUserName(userinfo.data.data.username)
+            setUserName(userinfo.data.data.name)
+            setBio(userinfo.data.data.bio)
+            setFollowers(userinfo.data.data.followers)
+            setFollowing(userinfo.data.data.following)
             console.log(userinfo)
         } catch (error) {
             console.log(error)
@@ -27,17 +36,16 @@ const ProfilePage = () => {
     }
     useEffect(()=>{
             getUserFromId()
-            console.log(userInfo)
     },[])
   return (
     
     <div className="block md:hidden">
         <div className="flex justify-between items-center py-4 px-2  shadow">
           <div className="flex justify-center items-center space-x-4">
-            <button onClick={()=>{router.back()}}>
+            <button onClick={()=>{router.push(`/profile/${localStorage.getItem("username")}`)}}>
               <IoIosArrowBack className="text-2xl" />
             </button>
-            <p className="font-semibold">{userInfo?.data?.data?.username}</p>
+            <p className="font-semibold">{userUserName?userUserName:""}</p>
           </div>
           <div className="flex justify-center items-center space-x-4">
             <HiDotsVertical className="text-2xl" />
@@ -56,23 +64,21 @@ const ProfilePage = () => {
               <p className="text-sm text-gray-500">Posts</p>
             </div>
             <div className="text-center">
-              <p className="font-semibold">200K</p>
+              <p className="font-semibold">{followers.length}</p>
               <p className="text-sm text-gray-500">Followers</p>
             </div>
             <div className="text-center">
-              <p className="font-semibold">816</p>
+              <p className="font-semibold">{following.length}</p>
               <p className="text-sm text-gray-500">Following</p>
             </div>
           </div>
         </div>
         <div className="flex flex-col  px-2 text-sm">
-          <p>User Name</p>
-          <p className="text-gray-400 text-sm">Video Creator</p>
+          <p>{userUserName}</p>
+          <p className="text-gray-400 text-sm">{userName}</p>
           <p className="text-xs">
-            Vlogger - Lifestyle/Education/Health & Beauty
+            {bio}
           </p>
-          <p className="text-xs">Business Enqueries - mail@artsene.co.uk</p>
-          <p className="text-xs">United Kindom</p>
           <p className="text-xs cursor-pointer text-sky-400">
             youtube.com/@username
           </p>

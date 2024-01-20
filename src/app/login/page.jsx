@@ -5,6 +5,7 @@ import React,{useState,useEffect} from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { Toaster } from "react-hot-toast";
 
 const schema = Yup.object().shape({
   username: Yup.string().required(),
@@ -65,9 +66,8 @@ const LoginPage = () => {
   const { errors, touched, values, handleChange, handleSubmit } = formik;
   return (
     <>
-      <div className="w-full  h-screen border-4 flex items-center justify-center bg-[url('/images/login-page.jpg')] bg-center bg-contain bg-no-repeat opacity-55 relative"></div>
-      <div className=" bg-red-50 opacity-60 w-full h-full absolute top-0"></div>
-      <div className="py-4 px-4 md:w-1/3 h-2/3 md:h-1/2 border-gray-500 absolute top-[15%] md:top-[25%] left-[7%] md:left-[35%] flex flex-col items-center justify-center shadow-lg ">
+      <div className="w-full  h-screen flex items-center justify-center ">
+      <div className="flex flex-col  items-center justify-center px-4 py-4">
         <form onSubmit={handleSubmit} >
           <label htmlFor="username" className="text-gray-600 font-semibold">
             Username:
@@ -92,7 +92,7 @@ const LoginPage = () => {
           <input
             name="password"
             id="password"
-            type="text"
+            type="password"
             placeholder="password"
             value={values.password}
             onChange={handleChange}
@@ -144,6 +144,8 @@ const LoginPage = () => {
           </Link>
         </div>
       </div>
+      </div>
+      <Toaster/>
     </>
   )
 }

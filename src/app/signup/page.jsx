@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 
 const schema = Yup.object().shape({
@@ -29,30 +29,25 @@ const SignupPage = () => {
         await axios.post("/api/users/signup",{username,password,email})
         .then((res)=>{
           console.log(res)
-          toast.success("user created successfully")
           setLoading(false)
-          router.push("/profile")
+          localStorage.setItem("username",username)
+          if(res.data.status === 201){
+          toast.success("User Signed up succesfully")
+          router.push("/login")}
+        else
+        toast.error("User already exists")
         })
         .catch((err)=>{
           console.log(err)
           toast.error("Something went wrong")
         })
       } catch (error) {
-        toast.error("Something went wrong")
+        toast.error(error.mesaage)
         console.log(error)
       }
       finally{
         setLoading(false)
       }
-      // if (
-      //   username === userAuthentication.username &&
-      //   password === userAuthentication.password
-      // ) {
-      //   localStorage.setItem("userToken", userAuthentication.token);
-      //   router.push("/Feed");
-      // } else {
-      //   toast.error("Please enter valid username or password");
-      // }
     },
   });
   useEffect(()=>{
@@ -66,9 +61,8 @@ const SignupPage = () => {
   const { errors, touched, values, handleChange, handleSubmit } = formik;
   return (
     <>
-      <div className="w-full  h-screen border-4 flex items-center justify-center bg-[url('/images/login-page.jpg')] bg-center bg-contain bg-no-repeat opacity-55 relative"></div>
-      <div className=" bg-red-50 opacity-60 w-full h-full absolute top-0"></div>
-      <div className="py-4 px-4 md:w-1/3 h-2/3 md:h-1/2 border-gray-500 absolute top-[15%] md:top-[25%] left-[7%] md:left-[35%] flex flex-col items-center justify-center shadow-lg ">
+      <div className="w-full  h-screen flex items-center justify-center ">
+      <div className="flex flex-col  items-center justify-center px-4 py-4 ">
         <form onSubmit={handleSubmit}>
           <label htmlFor="username" className="text-gray-600 font-semibold">
             Username:
@@ -113,7 +107,7 @@ const SignupPage = () => {
           <input
             name="password"
             id="password"
-            type="text"
+            type="password"
             placeholder="password"
             value={values.password}
             onChange={handleChange}
@@ -128,7 +122,7 @@ const SignupPage = () => {
             <button
               disabled={buttonDisabled}
               type="submit"
-              className="flex justify-center items-center  text-center bg-pink-400 text-white w-[235px] py-2 rounded-md font-semibold transform transition hover:bg-white hover:text-pink-400 disabled:bg-pink-300 hover:scale-95"
+              className="flex justify-center items-center  text-center bg-pink-400 text-white w-[235px] py-2 rounded-md font-semibold transform transition disabled:bg-pink-300 "
             >
               { loading === true && <div role="status">
                 <svg
@@ -167,6 +161,8 @@ const SignupPage = () => {
           </Link>
         </div>
       </div>
+      </div>
+      <Toaster />
     </>
   );
 };

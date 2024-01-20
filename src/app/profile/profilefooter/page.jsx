@@ -11,11 +11,14 @@ import Link from "next/link";
 
 const ProfileFooter = () => {
   const router = useRouter()
+  const pathname = usePathname()
+    const username = pathname.split('profile/').pop();
   const [footerSlider , openFooterSlider] = useState(false)
   const logout = async () =>{
     console.log("logout")
     try {
        await axios.get("/api/users/logout")
+       localStorage.removeItem("username")
        router.push("/login")
     } catch (error) {
         console.log(error)
@@ -38,7 +41,8 @@ const ProfileFooter = () => {
       {footerSlider === true && <div className="fixed bottom-10 border-t-2 w-full bg-white flex flex-col space-y-3 py-2 ">
         <button>Switch Account</button>
         <button>Setting</button>
-        <button>Profile</button>
+        <button onClick={()=>router.push(`/setdetails/${username}`)} >Edit profile</button>
+        <button onClick={()=>router.push(`/profilepage/${localStorage.getItem("username")}`)}>Profile</button>
         <button className="text-red-500" onClick={logout}>Logout</button>
       </div>}
       

@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema({
         required : [true,"Please provide a username"],
         unique : true
     },
+    name: String,
+    bio : String,
+    followers:Array,
+    following:Array,
     email : {
         type: String,
         required : [true,"Please provide a email"],

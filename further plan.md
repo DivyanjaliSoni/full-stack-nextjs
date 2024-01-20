@@ -12,3 +12,5 @@
                     likes,
                     comment,
                     userid
+
+Problem - same username and eamail se signup ho jaa rha
