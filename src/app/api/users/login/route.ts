@@ -14,13 +14,26 @@ export async function POST(request: NextRequest) {
 
     const user = await User.findOne({ username });
     if (user) {
-      const validPassword = bcryptjs.compare(password, user.password);
-      if (!validPassword)
-        return NextResponse.json(
-          { message: "password is incorrect" },
-          { status: 400 }
-        );
-    } 
+  try {
+    const validPassword = await bcryptjs.compare(password, user.password);
+    console.log("validPassword", validPassword);
+
+    if (!validPassword) {
+      return NextResponse.json(
+        { message: "Password is incorrect" },
+        { status: 400 }
+      );
+    }
+  } catch (error) {
+    // Handle any errors that might occur during the password comparison
+    console.error("Error comparing passwords:", error);
+    return NextResponse.json(
+      { message: "Error comparing passwords" },
+      { status: 500 }
+    );
+  }
+}
+
     else {
       return NextResponse.json(
         { message: "user does not exist" },
